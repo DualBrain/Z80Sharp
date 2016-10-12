@@ -2,3 +2,10 @@
 
 language: csharp
 solution: Z80Core/Z80Core.sln
+
+install:
+  - nuget restore Z80Core/Z80Core.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release solution-name.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Z80Core/Z80CoreTests/bin/Release/Z80CoreTests.dll
