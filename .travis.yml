@@ -1,4 +1,4 @@
 ## Travis CI Integration
 
 language: csharp
-solution: Z80Core.sln
+solution: Z80Core/Z80Core.sln
