@@ -27,5 +27,14 @@ namespace Z80CoreTests
             sut.Start(stopOn: 100);
             Assert.AreEqual(100, sut.PC);
         }
+
+        [Test]
+        public void TestIncB()
+        {
+            var memoryToLoad = new byte[] { 0x04 };
+            Array.Copy(memoryToLoad, sut.Memory, memoryToLoad.Length);
+            sut.Start(stopOn: 100);
+            Assert.AreEqual(1, sut.BC.Byte1);
+        }
     }
 }
