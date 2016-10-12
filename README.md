@@ -1,2 +1,2 @@
 # Z80Sharp
-YetAnotherZ80Processor
+Here is just another Z80 core command set implementation in C#. Made for fun.
