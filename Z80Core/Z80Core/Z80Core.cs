@@ -22,36 +22,64 @@ namespace Z80Processor
         }
     }
 
+    [StructLayout(LayoutKind.Explicit)]
+    public struct RegisterMap
+    {
+        [FieldOffset(0)] public byte A;
+        [FieldOffset(1)] public byte F;
+        [FieldOffset(0)] public Int16 AF;
+
+        [FieldOffset(2)] public byte B;
+        [FieldOffset(3)] public byte C;
+        [FieldOffset(2)] public Int16 BC;
+
+        [FieldOffset(4)] public byte D;
+        [FieldOffset(5)] public byte E;
+        [FieldOffset(4)] public Int16 DE;
+
+        [FieldOffset(6)] public byte H;
+        [FieldOffset(7)] public byte L;
+        [FieldOffset(6)] public Int16 HL;
+
+
+        [FieldOffset(8)] public Int16 PC;
+    }
+
     public class Z80Core
     {
-        private byte af;
-        public byte AF { get { return af; } }
+        //private byte af;
+        //public byte AF { get { return af; } }
 
-        private TwoByteRegister bc;
-        public TwoByteRegister BC { get { return bc; } }
+        //private TwoByteRegister bc;
+        //public TwoByteRegister BC { get { return bc; } }
 
-        private Int16 pc;
+        //private Int16 pc;
+
+        private RegisterMap registers = new RegisterMap();
 
         private byte[] memory = new byte[0xFFFF];
         public byte[] Memory { get { return memory; } }
 
-        public short PC { get { return pc; } }
+        public RegisterMap Registers { get { return registers; } }
+
+        //public short PC { get { return pc; } }
 
         public void Start(Int16 startAddress = 0x0, int stopOn = 0xFFFF)
         {
-            pc = startAddress;
+            registers.PC = startAddress;
             while (true)
             {
-                byte commandCode = memory[pc];
+                byte commandCode = memory[registers.PC];
                 switch (commandCode)
                 {
                     case 0x00: break; //nop
-                    case 0x01: bc.Byte1 = memory[++pc]; bc.Byte2 = memory[++pc]; break; //ld bc,**
-                    case 0x04: bc.Byte1++; break; //inc b
-                    case 0x06: bc.Byte1 = memory[++pc]; break; //ld b,*
+                    case 0x01: registers.B = memory[++registers.PC]; registers.C = memory[++registers.PC]; break; //ld bc,**
+                    case 0x05: registers.B--; break; //dec b
+                    case 0x04: registers.B++; break; //inc b
+                    case 0x06: registers.B = memory[++registers.PC]; break; //ld b,*
                 }
-                pc++;
-                if (pc == stopOn)
+                registers.PC++;
+                if (registers.PC == stopOn)
                     return;
             }
         }
