@@ -47,5 +47,20 @@ namespace Z80CoreTests
             LoadMemoryAndRun(new byte[] { 0x05 });
             Assert.AreEqual(0xFF, sut.Registers.B);
         }
+
+        [Test]
+        public void TestLdA()
+        {
+            LoadMemoryAndRun(new byte[] { 0x3E, 0xAB });
+            Assert.AreEqual(0xAB, sut.Registers.A);
+            
+        }
+
+        [Test]
+        public void TestLdBtoA()
+        {
+            LoadMemoryAndRun(new byte[] { 0x3E, 0xAB, 0x47 });
+            Assert.AreEqual(0xAB, sut.Registers.B);
+        }
     }
 }

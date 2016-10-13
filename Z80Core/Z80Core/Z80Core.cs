@@ -8,21 +8,6 @@ using System.Runtime.InteropServices;
 namespace Z80Processor
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct TwoByteRegister
-    {
-        [FieldOffset(0)]
-        public byte Byte1;
-        [FieldOffset(1)]
-        public byte Byte2;
-        [FieldOffset(0)]
-        public Int16 Int1;
-        public override string ToString()
-        {
-            return string.Format("Byte 1: {0:X}, byte 2: {1:X}", Byte1, Byte2);
-        }
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
     public struct RegisterMap
     {
         [FieldOffset(0)] public byte A;
@@ -47,22 +32,15 @@ namespace Z80Processor
 
     public class Z80Core
     {
-        //private byte af;
-        //public byte AF { get { return af; } }
-
-        //private TwoByteRegister bc;
-        //public TwoByteRegister BC { get { return bc; } }
-
-        //private Int16 pc;
-
         private RegisterMap registers = new RegisterMap();
 
         private byte[] memory = new byte[0xFFFF];
         public byte[] Memory { get { return memory; } }
 
-        public RegisterMap Registers { get { return registers; } }
-
-        //public short PC { get { return pc; } }
+        public RegisterMap Registers
+        {
+            get { return registers; }
+        }
 
         public void Start(Int16 startAddress = 0x0, int stopOn = 0xFFFF)
         {
@@ -74,9 +52,12 @@ namespace Z80Processor
                 {
                     case 0x00: break; //nop
                     case 0x01: registers.B = memory[++registers.PC]; registers.C = memory[++registers.PC]; break; //ld bc,**
-                    case 0x05: registers.B--; break; //dec b
                     case 0x04: registers.B++; break; //inc b
+                    case 0x05: registers.B--; break; //dec b
                     case 0x06: registers.B = memory[++registers.PC]; break; //ld b,*
+                    case 0x3E: registers.A = memory[++registers.PC]; break; //ld a,*
+                    case 0x47: registers.B = registers.A; break; //ld b,a
+
                 }
                 registers.PC++;
                 if (registers.PC == stopOn)
